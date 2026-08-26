@@ -1,0 +1,126 @@
+\documentclass[10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{calc}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+\hoffset=-1in
+\voffset=-1in
+
+% ===== CONFIGURATION - MODIFIER ICI =====
+\newcommand{\HauteurEtiquette}{26mm}      % Options : 26mm, 50mm, 100mm
+\newcommand{\RatioPointe}{1.3}           % Ratio de la pointe (ajustable)
+% ========================================
+
+% ===== SAISIE UNIQUE DU TEXTE =====
+\newcommand{\TexteEtiquette}{Eau osmosée CVC - Vers CTA 5A / 5B}
+
+% ===== MARGE BLANCHE DE PROTECTION =====
+\newlength{\EtqMargePage}
+\setlength{\EtqMargePage}{3mm}
+
+% ===== LONGUEURS DE TRAVAIL =====
+\newlength{\EtqHauteur}
+\newlength{\EtqLargeurTexte}
+\newlength{\EtqPointe}
+\newlength{\EtqMarge}
+\newlength{\EtqDecalage}
+\newlength{\EtqGap}
+\newlength{\EtqBord}
+\newlength{\EtqLargeurTotale}
+\newlength{\EtqPolice}
+\newlength{\EtqInterligne}
+\newlength{\PageW}
+\newlength{\PageH}
+
+% ======================================================================
+% Calcul des proportions
+% ======================================================================
+\newcommand{\CalculEtiquette}{%
+  \setlength{\EtqHauteur}{\HauteurEtiquette}%
+
+  \ifdim\EtqHauteur=50mm
+    \setlength{\EtqGap}{4mm}%
+  \else
+    \ifdim\EtqHauteur=26mm
+      \setlength{\EtqGap}{6mm}%
+    \else
+      \ifdim\EtqHauteur=100mm
+        \setlength{\EtqGap}{8mm}%
+      \else
+        \setlength{\EtqGap}{0.08\EtqHauteur}%
+      \fi
+    \fi
+  \fi
+
+  \setlength{\EtqPolice}{0.40\EtqHauteur}%
+  \setlength{\EtqInterligne}{1.15\EtqPolice}%
+  \setlength{\EtqPointe}{\RatioPointe\EtqHauteur}%
+  \setlength{\EtqMarge}{0.30\EtqHauteur}%
+  \setlength{\EtqDecalage}{0.08\EtqHauteur}%
+  \setlength{\EtqBord}{0.045\EtqHauteur}%
+
+  \sbox0{\fontsize{\EtqPolice}{\EtqInterligne}\selectfont\bfseries\TexteEtiquette}%
+  \setlength{\EtqLargeurTexte}{\wd0}%
+
+  \setlength{\EtqLargeurTotale}{2\EtqDecalage + 2\EtqPointe + \EtqLargeurTexte + 2\EtqMarge + 2\EtqGap}%
+}
+
+% ======================================================================
+% Dessin de l'étiquette
+% ======================================================================
+\newcommand{\DessinerEtiquette}{%
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    \pgfmathsetmacro{\Hn}{\EtqHauteur/1mm}
+    \pgfmathsetmacro{\Wn}{\EtqLargeurTotale/1mm}
+    \pgfmathsetmacro{\Pn}{\EtqPointe/1mm}
+    \pgfmathsetmacro{\Bn}{\EtqBord/1mm}
+    \pgfmathsetmacro{\Dn}{\EtqDecalage/1mm}
+    \pgfmathsetmacro{\Gap}{\EtqGap/1mm}
+    \useasboundingbox (0,0) rectangle (\Wn,\Hn);
+
+    \fill[white] (0,0) rectangle (\Wn,\Hn);
+
+    \draw[black,line width=\Bn mm]
+      (\Dn,{\Hn/2}) -- ({\Dn+\Pn},0) -- ({\Dn+\Pn},\Hn) -- cycle;
+
+    \draw[black,line width=\Bn mm]
+      ({\Wn-\Dn},{\Hn/2}) -- ({\Wn-\Dn-\Pn},0) -- ({\Wn-\Dn-\Pn},\Hn) -- cycle;
+
+    \draw[black,line width=\Bn mm]
+      ({\Dn+\Pn+\Gap},0) rectangle ({\Wn-\Dn-\Pn-\Gap},\Hn);
+
+    \node[black,font=\fontsize{\EtqPolice}{\EtqInterligne}\selectfont\bfseries]
+      at (\Wn/2,\Hn/2) {\TexteEtiquette};
+  \end{tikzpicture}%
+}
+
+% ======================================================================
+% Génération de la page
+% ======================================================================
+\newcommand{\PageEtiquette}{%
+  \CalculEtiquette%
+  \setlength{\PageW}{\EtqLargeurTotale+2\EtqMargePage}%
+  \setlength{\PageH}{\EtqHauteur+2\EtqMargePage}%
+  \pdfpagewidth=\PageW\relax
+  \pdfpageheight=\PageH\relax
+  \shipout\vbox to \PageH{%
+    \vfil
+    \hbox to \PageW{\hfil\DessinerEtiquette\hfil}%
+    \vfil
+  }%
+}
+
+\begin{document}
+
+\PageEtiquette
+
+\end{document}

@@ -1,0 +1,24 @@
+# ===== Sorties générées par l'outil (ne pas versionner) =====
+export_pdf/
+export_latex/
+
+# ===== Résidus LaTeX (au cas où une compilation manuelle en laisse) =====
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# ===== Éditeurs / OS =====
+.vscode/
+.DS_Store
+Thumbs.db

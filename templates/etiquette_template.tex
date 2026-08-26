@@ -1,0 +1,191 @@
+\documentclass[10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{calc}
+\usepackage{graphicx}
+\usepackage{etoolbox}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+\hoffset=-1in
+\voffset=-1in
+
+% ===== EMPLACEMENT DES PICTOGRAMMES (PNG) =====
+% Place les fichiers .png (corrosif.png, inflammable.png, etc.)
+% soit à côté du .tex, soit dans un sous-dossier "pictos/".
+\graphicspath{{./}{./pictos/}}
+
+% ===== CONFIGURATION - MODIFIER ICI =====
+\newcommand{\HauteurEtiquette}{{{TAILLE}}} % Options : 26mm, 50mm, 100mm
+\newcommand{\RatioPointe}{1.3} % Ratio de la pointe (ajustable)
+\newcommand{\RatioPicto}{0.75} % Taille des pictos par rapport à la hauteur de l'étiquette
+% ========================================
+
+% ===== SAISIE DU TEXTE =====
+\newcommand{\TexteEtiquette}{{{TEXTE}}}
+
+% ===== SAISIE DES PICTOGRAMMES (0, 1, 2 ou 3) =====
+% Pictos disponibles : explosif, inflammable, comburant, gaz-sous-pression, corrosif, toxique-aigu, nocif-irritant, danger-grave-pour-la-sante, dangereux-pour-environnement
+% Laisser {} (vide) pour ne pas afficher de pictogramme sur ce slot.
+\newcommand{\PictoUn}{${PICTO1}}
+\newcommand{\PictoDeux}{${PICTO2}}
+\newcommand{\PictoTrois}{${PICTO3}}
+
+% ===== MARGE BLANCHE DE PROTECTION =====
+\newlength{\EtqMargePage}
+\setlength{\EtqMargePage}{3mm}
+
+% ===== LONGUEURS DE TRAVAIL =====
+\newlength{\EtqHauteur}
+\newlength{\EtqLargeurTexte}
+\newlength{\EtqPointe}
+\newlength{\EtqMarge}
+\newlength{\EtqDecalage}
+\newlength{\EtqGap}
+\newlength{\EtqGapPicto}
+\newlength{\EtqBord}
+\newlength{\EtqPictoTaille}
+\newlength{\EtqLargeurPictos}
+\newlength{\EtqLargeurTotale}
+\newlength{\EtqPolice}
+\newlength{\EtqInterligne}
+\newlength{\PageW}
+\newlength{\PageH}
+
+% ===== DÉTECTION DES PICTOS ACTIFS =====
+\newif\ifEtqPictoUnActif
+\newif\ifEtqPictoDeuxActif
+\newif\ifEtqPictoTroisActif
+
+\newcommand{\DetecterPictos}{%
+\ifdefempty{\PictoUn}{\EtqPictoUnActiffalse}{\EtqPictoUnActiftrue}%
+\ifdefempty{\PictoDeux}{\EtqPictoDeuxActiffalse}{\EtqPictoDeuxActiftrue}%
+\ifdefempty{\PictoTrois}{\EtqPictoTroisActiffalse}{\EtqPictoTroisActiftrue}%
+}
+
+% ======================================================================
+% Calcul des proportions
+% ======================================================================
+\newcommand{\CalculEtiquette}{%
+\DetecterPictos%
+\setlength{\EtqHauteur}{\HauteurEtiquette}%
+
+\ifdim\EtqHauteur=50mm
+\setlength{\EtqGap}{6mm}%
+\else
+\ifdim\EtqHauteur=26mm
+\setlength{\EtqGap}{2mm}%
+\else
+\ifdim\EtqHauteur=100mm
+\setlength{\EtqGap}{9mm}%
+\else
+\setlength{\EtqGap}{0.08\EtqHauteur}%
+\fi
+\fi
+\fi
+
+\setlength{\EtqPolice}{0.40\EtqHauteur}%
+\setlength{\EtqInterligne}{1.15\EtqPolice}%
+\setlength{\EtqPointe}{\RatioPointe\EtqHauteur}%
+\setlength{\EtqMarge}{0.30\EtqHauteur}%
+\setlength{\EtqDecalage}{0.08\EtqHauteur}%
+\setlength{\EtqBord}{0.045\EtqHauteur}%
+\setlength{\EtqPictoTaille}{\RatioPicto\EtqHauteur}%
+\setlength{\EtqGapPicto}{0.15\EtqHauteur}%
+
+% Largeur cumulée des pictos actifs (taille + espace après chacun)
+\setlength{\EtqLargeurPictos}{0mm}%
+\ifEtqPictoUnActif
+\addtolength{\EtqLargeurPictos}{\EtqPictoTaille+\EtqGapPicto}%
+\fi
+\ifEtqPictoDeuxActif
+\addtolength{\EtqLargeurPictos}{\EtqPictoTaille+\EtqGapPicto}%
+\fi
+\ifEtqPictoTroisActif
+\addtolength{\EtqLargeurPictos}{\EtqPictoTaille+\EtqGapPicto}%
+\fi
+
+\sbox0{\fontsize{\EtqPolice}{\EtqInterligne}\selectfont\bfseries\TexteEtiquette}%
+\setlength{\EtqLargeurTexte}{\wd0}%
+
+\setlength{\EtqLargeurTotale}{2\EtqDecalage + 2\EtqPointe + \EtqLargeurPictos + \EtqLargeurTexte + 2\EtqMarge + 2\EtqGap}%
+}
+
+% ======================================================================
+% Dessin de l'étiquette
+% ======================================================================
+\newcommand{\DessinerEtiquette}{%
+\begin{tikzpicture}[x=1mm,y=1mm]
+\pgfmathsetmacro{\Hn}{\EtqHauteur/1mm}
+\pgfmathsetmacro{\Wn}{\EtqLargeurTotale/1mm}
+\pgfmathsetmacro{\Pn}{\EtqPointe/1mm}
+\pgfmathsetmacro{\Bn}{\EtqBord/1mm}
+\pgfmathsetmacro{\Dn}{\EtqDecalage/1mm}
+\pgfmathsetmacro{\Gap}{\EtqGap/1mm}
+\pgfmathsetmacro{\Marge}{\EtqMarge/1mm}
+\pgfmathsetmacro{\PictoT}{\EtqPictoTaille/1mm}
+\pgfmathsetmacro{\GapP}{\EtqGapPicto/1mm}
+\useasboundingbox (0,0) rectangle (\Wn,\Hn);
+
+\fill[white] (0,0) rectangle (\Wn,\Hn);
+
+\draw[black,line width=\Bn mm]
+(\Dn,{\Hn/2}) -- ({\Dn+\Pn},0) -- ({\Dn+\Pn},\Hn) -- cycle;
+
+\draw[black,line width=\Bn mm]
+({\Wn-\Dn},{\Hn/2}) -- ({\Wn-\Dn-\Pn},0) -- ({\Wn-\Dn-\Pn},\Hn) -- cycle;
+
+\draw[black,line width=\Bn mm]
+({\Dn+\Pn+\Gap},0) rectangle ({\Wn-\Dn-\Pn-\Gap},\Hn);
+
+% ----- Positionnement du contenu (pictos puis texte) -----
+\pgfmathsetmacro{\xContenu}{\Dn+\Pn+\Gap+\Marge}
+
+\ifEtqPictoUnActif
+\node[anchor=west,inner sep=0pt] at (\xContenu,{\Hn/2}) {\includegraphics[height=\PictoT mm]{\PictoUn.png}};
+\pgfmathsetmacro{\xContenu}{\xContenu+\PictoT+\GapP}
+\fi
+
+\ifEtqPictoDeuxActif
+\node[anchor=west,inner sep=0pt] at (\xContenu,{\Hn/2}) {\includegraphics[height=\PictoT mm]{\PictoDeux.png}};
+\pgfmathsetmacro{\xContenu}{\xContenu+\PictoT+\GapP}
+\fi
+
+\ifEtqPictoTroisActif
+\node[anchor=west,inner sep=0pt] at (\xContenu,{\Hn/2}) {\includegraphics[height=\PictoT mm]{\PictoTrois.png}};
+\pgfmathsetmacro{\xContenu}{\xContenu+\PictoT+\GapP}
+\fi
+
+\node[black,anchor=west,font=\fontsize{\EtqPolice}{\EtqInterligne}\selectfont\bfseries]
+at (\xContenu,{\Hn/2}) {\TexteEtiquette};
+\end{tikzpicture}%
+}
+
+% ======================================================================
+% Génération de la page
+% ======================================================================
+\newcommand{\PageEtiquette}{%
+\CalculEtiquette%
+\setlength{\PageW}{\EtqLargeurTotale+2\EtqMargePage}%
+\setlength{\PageH}{\EtqHauteur+2\EtqMargePage}%
+\pdfpagewidth=\PageW\relax
+\pdfpageheight=\PageH\relax
+\shipout\vbox to \PageH{%
+\vfil
+\hbox to \PageW{\hfil\DessinerEtiquette\hfil}%
+\vfil
+}%
+}
+
+\begin{document}
+
+\PageEtiquette
+
+\end{document}

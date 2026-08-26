@@ -1,0 +1,45 @@
+TABLEAU DES PRODUITS CHIMIQUES LIQUIDES
+
+---------------------------------------------------------------------------------------------------------------
+Produit                                 Formule      Picto1                  Picto2                     Picto3
+---------------------------------------------------------------------------------------------------------------
+Acide chlorhydrique                     HCl          corrosif                irritant
+Acide fluorhydrique                     HF           corrosif                toxique-aigu               danger-pour-la-santé
+Acide nitrique                          HNO₃         corrosif                comburant
+Acide sulfurique                        H₂SO₄        corrosif
+Acide phosphorique                      H₃PO₄        corrosif
+Acide acétique                          CH₃COOH      corrosif                inflammable
+Acide citrique                          C₆H₈O₇       irritant
+Soude (hydroxyde de sodium)             NaOH         corrosif
+Hydroxyde de potassium                  KOH          corrosif
+Hydroxyde d'ammonium                    NH₄OH        corrosif                dangereux-pour-environnement
+TMAH (Hydroxyde de tétraméthylammonium) (CH₃)₄NOH    corrosif                toxique-aigu               danger-pour-la-santé
+Méthanol                                CH₃OH        inflammable             toxique-aigu               danger-pour-la-santé
+Éthanol                                 C₂H₅OH       inflammable             irritant
+Isopropanol (IPA)                       C₃H₈O        inflammable             irritant
+Acétone                                 C₃H₆O        inflammable             irritant
+Monoéthylène glycol (MEG)               C₂H₆O₂       danger-pour-la-santé
+Propylène glycol (MPG)                  C₃H₈O₂       aucun
+Peroxyde d'hydrogène                    H₂O₂         comburant               corrosif
+Hypochlorite de sodium (Javel)          NaClO        corrosif                dangereux-pour-environnement
+Chlorure ferrique                       FeCl₃        corrosif                irritant
+Sulfate d'aluminium                     Al₂(SO₄)₃    irritant
+Bisulfite de sodium                     NaHSO₃       irritant
+Permanganate de potassium (solution)    KMnO₄        comburant               dangereux-pour-environnement
+Nitrate d'ammonium (solution)           NH₄NO₃       comburant               irritant
+Eau déminéralisée                       H₂O          aucun
+Eau osmosée                             H₂O          aucun
+Eau adoucie                             H₂O          aucun
+Saumure                                 NaCl + H₂O   aucun
+---------------------------------------------------------------------------------------------------------------
+
+LÉGENDE DES PICTOGRAMMES
+
+GHS02 : Inflammable
+GHS03 : Comburant
+GHS05 : Corrosif
+GHS06 : Toxique aigu
+GHS07 : Irritant / nocif
+GHS08 : Danger pour la santé
+GHS09 : Dangereux pour l'environnement
+Aucun : Pas de pictogramme CLP requis
